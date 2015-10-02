@@ -47,7 +47,7 @@ class Aurora:
 
 					if kp >= self.kpThreshold:
 						alertList.append(forecast)
-
+		alertList.sort()
 		return(alertList)
 
 		
