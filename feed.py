@@ -8,7 +8,7 @@ from check import Aurora
 
 
 url = 'http://www.aurora-service.eu/aurora-forecast/'
-kpThreshold = 5
+kpThreshold = 6
 alertList = Aurora(url, kpThreshold).getAlertList()
 
 today = datetime.date.today()
