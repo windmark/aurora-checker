@@ -2,21 +2,16 @@
 
 import datetime
 from feedgen.feed import FeedGenerator
+from pushbullet import Pushbullet
+
 from check import Aurora
 
 
 url = 'http://www.aurora-service.eu/aurora-forecast/'
-alertList = Aurora(url, 5).getAlertList()
+kpThreshold = 6
+alertList = Aurora(url, kpThreshold).getAlertList()
 
 today = datetime.date.today()
-
-feedGen = FeedGenerator()
-feedGen.id('http://windmark.se/aurora.rss')
-feedGen.title('Aurora RSS')
-feedGen.author( {'name':'Marcus Windmark','email':'marcus@windmark.se'} )
-feedGen.link( href='http://windmark.se/aurora', rel='alternate' )
-feedGen.language('en')
-feedGen.description('The latest Aurora new from aurora-service.eu')
 
 description = ''
 for item in alertList:
@@ -24,9 +19,7 @@ for item in alertList:
 	description	+= title + "\n"
 
 
-print(description)
-feedEntry = feedGen.add_entry()
-feedEntry.id('1')
-feedEntry.title('Aurora Status ' + today.strftime('%d/%m/%Y'))
-feedEntry.content(description)
-feedGen.rss_file('rss.xml', pretty=True)
+if len(alertList) > 0:
+	pbKey = '7962b1649658b184a9ecfb78844f7384'
+	pb = Pushbullet(pbKey)
+	push = pb.push_note("Aurora status " + today.strftime('%d/%m/%Y'), description)
