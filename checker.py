@@ -3,17 +3,27 @@
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from dateutil.parser import parse
+from datetime import datetime
 import re
 
 
-
-class Aurora:
+class AuroraChecker:
 	url = ''
 	kpThreshold = 0
 
 	def __init__(self, url, kpThreshold):
 		self.url = url
 		self.kpThreshold = kpThreshold
+
+	def checkFuture(self, endTime):
+		isFuture = False
+
+		currentTime = datetime.utcnow()
+		
+		if currentTime <= endTime:
+			isFuture = True
+
+		return(isFuture)
 
 
 	def getAlertList(self):
@@ -43,9 +53,12 @@ class Aurora:
 				for obj in enumerate(values, start = 0):
 					kp = int(obj[1])
 					forecast = formatedDates[obj[0]], hours[0], hours[1], kp
+					endTime = formatedDates[obj[0]].replace(hour = int(hours[1]))
+
 					forecastList.append(forecast)
 
-					if kp >= self.kpThreshold:
+					isFuture = self.checkFuture(endTime)
+					if isFuture and kp >= self.kpThreshold:
 						alertList.append(forecast)
 		alertList.sort()
 		return(alertList)

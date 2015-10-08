@@ -5,7 +5,7 @@ import configparser
 from feedgen.feed import FeedGenerator
 from pushbullet import Pushbullet
 
-from check import Aurora
+from check import AuroraChecker
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -14,7 +14,7 @@ url = config['DEFAULT']['AuroraURL']
 kpThreshold = int(config['DEFAULT']['KpThreshold'])
 pbKey = config['DEFAULT']['PushbulletKey']
 
-alertList = Aurora(url, kpThreshold).getAlertList()
+alertList = AuroraChecker(url, kpThreshold).getAlertList()
 
 today = datetime.date.today()
 utcTime = datetime.datetime.utcnow()
@@ -28,4 +28,5 @@ if len(alertList) > 0:
 	pb = Pushbullet(pbKey)
 	title = "Aurora status over kp" + str(kpThreshold) + " at UTC " + utcTime.strftime("%H:%M")
 	pb_channel = pb.channels[0]
-	pb_channel.push_note(title description)
+	print(description)
+	#pb_channel.push_note(title description)
