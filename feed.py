@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import datetime
+import sys
 import configparser
 from feedgen.feed import FeedGenerator
 from pushbullet import Pushbullet
@@ -11,8 +12,18 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 
 url = config['DEFAULT']['AuroraURL']
-kpThreshold = int(config['DEFAULT']['KpThreshold'])
 pbKey = config['DEFAULT']['PushbulletKey']
+kpThreshold = config['DEFAULT']['KpThreshold']
+
+
+if not url and not pbKey and not kpThreshold:
+	sys.exit("ERROR reading config.ini, please read documentation.")
+
+if not kpThreshold.isdigit():
+	sys.exit("ERROR reading kpThreshold, integer required.")
+else:
+	kpThreshold = int(kpThreshold)
+
 
 alertList = AuroraChecker(url, kpThreshold).getAlertList()
 
