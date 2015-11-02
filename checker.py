@@ -27,7 +27,10 @@ class AuroraChecker:
 
 
 	def getAlertList(self):
-		response = urlopen(self.url)
+		try:
+			response = urlopen(self.url, timeout=5)
+		except:
+			return False 
 		html = response.read()
 
 		soup = BeautifulSoup(html, 'html.parser')

@@ -24,20 +24,23 @@ if not kpThreshold.isdigit():
 else:
 	kpThreshold = int(kpThreshold)
 
-
 alertList = AuroraChecker(url, kpThreshold).getAlertList()
+pb = Pushbullet(pbKey)
 
-today = datetime.date.today()
-utcTime = datetime.datetime.utcnow()
 
-description = ''
-for item in alertList:
-	title = item[0].strftime('%d/%m/%Y') + ': ' + "UTC" + item[1] + '-' + item[2]
-	description	+= title + " - kp" + str(item[3]) + "\n"
+if not isinstance(alertList, list):
+	pb.push_note("WARNING: Aurora-service.eu is down", "Aurora-service.eu is down and the checker has not been able to correctly update.")
+else:
+	today = datetime.date.today()
+	utcTime = datetime.datetime.utcnow()
 
-if len(alertList) > 0:
-	pb = Pushbullet(pbKey)
-	title = "Aurora status over kp" + str(kpThreshold) + " at UTC " + utcTime.strftime("%H:%M")
-	pb_channel = pb.channels[0]
-	print(description)
-	pb_channel.push_note(title, description)
+	description = ''
+	for item in alertList:
+		title = item[0].strftime('%d/%m/%Y') + ': ' + "UTC" + item[1] + '-' + item[2]
+		description	+= title + " - kp" + str(item[3]) + "\n"
+
+	if len(alertList) > 0:
+		title = "Aurora status over kp" + str(kpThreshold) + " at UTC " + utcTime.strftime("%H:%M")
+		pb_channel = pb.channels[0]
+		print(description)
+		pb_channel.push_note(title, description)
