@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3.4
 
 from urllib.request import urlopen
 from bs4 import BeautifulSoup

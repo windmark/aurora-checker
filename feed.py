@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3.4
 
 import datetime
 import sys
@@ -44,3 +44,6 @@ else:
 		pb_channel = pb.channels[0]
 		print(description)
 		pb_channel.push_note(title, description)
+
+with open('log.txt', 'a') as file:
+    file.write('Successfully run at ' + datetime.datetime.now().strftime("%x - %H:%M") + "\n")
